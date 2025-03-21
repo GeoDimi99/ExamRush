@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Deck - ExamRush</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/add-deck.css">
+    <script src="../js/main.js" defer></script>
+    <style>
+        h1 {
+            color: #3498db;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .add-card-button {
+            background-color: #2ecc71;
+            margin-bottom: 20px;
+        }
+
+        .add-card-button:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <ul style="display: flex; align-items: center; padding: 0; margin: 0;">
+            <li style="margin-right: auto; list-style: none;">
+                <a href="deck.html" style="font-size: 24px; text-decoration: none; padding: 10px;">⬅</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<h1>Add a New Deck</h1>
+<form id="deck-form">
+    <label for="title">Deck Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+
+    <div id="cards-container">
+        <!-- Card fields will be dynamically added here -->
+    </div>
+
+    <button type="button" class="add-card-button" onclick="addCard()">Add Card</button>
+    <button type="submit">Create Deck</button>
+</form>
+
+<script>
+    let cardCount = 0;
+
+    // Function to add a new card
+    function addCard() {
+        cardCount++;
+        const cardHTML = `
+            <div class="card" id="card-${cardCount}">
+                <h3>Card ${cardCount}</h3>
+                <label for="question-${cardCount}">Question:</label>
+                <input type="text" id="question-${cardCount}" name="question-${cardCount}" required>
+
+                <label for="answer1-${cardCount}">Answer 1:</label>
+                <input type="text" id="answer1-${cardCount}" name="answer1-${cardCount}" required>
+
+                <label for="answer2-${cardCount}">Answer 2:</label>
+                <input type="text" id="answer2-${cardCount}" name="answer2-${cardCount}" required>
+
+                <label for="answer3-${cardCount}">Answer 3:</label>
+                <input type="text" id="answer3-${cardCount}" name="answer3-${cardCount}" required>
+
+                <label for="answer4-${cardCount}">Answer 4:</label>
+                <input type="text" id="answer4-${cardCount}" name="answer4-${cardCount}" required>
+
+                <label for="correct-answer-${cardCount}">Correct Answer (1-4):</label>
+                <input type="number" id="correct-answer-${cardCount}" name="correct-answer-${cardCount}" min="1" max="4" required>
+            </div>
+        `;
+        document.getElementById("cards-container").insertAdjacentHTML("beforeend", cardHTML);
+    }
+
+    // Function to handle form submission
+    document.getElementById("deck-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        const teacher_id = JSON.parse(Android.getUserInfo()).user_id; // Get teacher ID from user info
+
+        const cards = [];
+        for (let i = 1; i <= cardCount; i++) {
+            const question = document.getElementById(`question-${i}`).value;
+            const answers = [
+                document.getElementById(`answer1-${i}`).value,
+                document.getElementById(`answer2-${i}`).value,
+                document.getElementById(`answer3-${i}`).value,
+                document.getElementById(`answer4-${i}`).value,
+            ];
+            const correctAnswerIndex = parseInt(document.getElementById(`correct-answer-${i}`).value) - 1;
+
+            cards.push({
+                question: question,
+                answers: answers,
+                correct_answer: answers[correctAnswerIndex],
+            });
+        }
+
+        const deck = {
+            title: title,
+            description: description,
+            teacher_id: teacher_id,
+            cards: cards,
+        };
+
+        // Send the deck data to the server using fetch
+        fetch("http://192.168.0.10:5000/api/decks", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(deck),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message); // Deck created successfully
+                window.location.href = "deck.html"; // Redirect to the deck management page
+            } else {
+                alert(data.error); // Show error message
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred while creating the deck.");
+        });
+    });
+</script>
+</body>
+</html>

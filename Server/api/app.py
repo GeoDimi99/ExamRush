@@ -161,6 +161,55 @@ def get_decks():
     return jsonify(decks)
 
 
+@app.route("/api/decks", methods=["POST"])
+def create_deck():
+    try:
+        # Parse the JSON data from the request
+        data = request.get_json()
+        app.logger.debug(f"Received data: {data}")
+
+        # Validate required fields
+        if not data or "title" not in data or "description" not in data or "teacher_id" not in data or "cards" not in data:
+            app.logger.error("Missing required fields in JSON")
+            return jsonify({"error": "Missing required fields: title, description, teacher_id, or cards"}), 400
+
+        # Extract deck information
+        title = data["title"]
+        description = data["description"]
+        teacher_id = data["teacher_id"]
+        cards = data["cards"]
+
+        # Validate cards
+        if not isinstance(cards, list) or len(cards) == 0:
+            app.logger.error("Invalid cards format")
+            return jsonify({"error": "Cards must be a non-empty list"}), 400
+
+        # Check if the deck title already exists
+        if decks_collection.find_one({"title": title}):
+            app.logger.error(f"Deck with title '{title}' already exists")
+            return jsonify({"error": "A deck with this title already exists"}), 409
+
+        # Insert the deck into the decks collection
+        deck_id = decks_collection.insert_one({
+            "title": title,
+            "description": description,
+            "teacher_id": teacher_id,
+            "cards": cards
+        }).inserted_id
+
+        app.logger.info(f"Deck created with ID: {deck_id}")
+
+        # Return success response
+        return jsonify({
+            "message": "Deck created successfully",
+            "deck_id": str(deck_id)
+        }), 201
+
+    except Exception as e:
+        app.logger.error(f"Error while creating deck: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
 @app.route("/api/decks/<deck_id>", methods=["GET"])
 def get_deck_by_title(deck_id):
     app.logger.info(f"Richiesta ricevuta: GET /api/decks/{deck_id}")
@@ -289,31 +338,7 @@ def upload_profile_image(user_id):
         return jsonify({"error": str(e)}), 500
 
 
-# # Restituisce l'immagine del profilo dell'utente
-# @app.route("/api/users/<user_id>/profile-image", methods=["GET"])
-# def get_profile_image(user_id):
-#     user = users_collection.find_one({"user_id": user_id}, {"_id": 0, "profile_image": 1})
-#     return jsonify(user) if user else (jsonify({"error": "Immagine non trovata"}), 404)
 
-# # Carica una nuova immagine del profilo per l'utente
-# @app.route("/api/users/<user_id>/profile-image", methods=["POST"])
-# def upload_profile_image(user_id):
-#     file = request.files["image"]
-#     file_key = f"{user_id}/{file.filename}"
-#     s3.upload_fileobj(file, BUCKET_NAME, file_key)
-#     users_collection.update_one({"user_id": user_id}, {"$set": {"profile_image": file_key}})
-#     return jsonify({"message": "Immagine caricata con successo!", "file": file_key})
-
-# # Aggiorna l'immagine del profilo dell'utente
-# @app.route("/api/users/<user_id>/profile-image", methods=["PUT"])
-# def update_profile_image(user_id):
-#     return upload_profile_image(user_id)
-
-# # Elimina l'immagine del profilo dell'utente
-# @app.route("/api/users/<user_id>/profile-image", methods=["DELETE"])
-# def delete_profile_image(user_id):
-#     users_collection.update_one({"user_id": user_id}, {"$unset": {"profile_image": 1}})
-#     return jsonify({"message": "Immagine eliminata con successo!"})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

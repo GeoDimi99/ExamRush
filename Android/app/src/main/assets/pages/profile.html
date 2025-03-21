@@ -20,7 +20,7 @@
         </ul>
     </nav>
 </header>
-<section id="profile-info">
+<section id="profile-info">a
     <div>
         <h2>Your profile</h2>
         <img alt="Foto Profilo" id="profile-img">
@@ -57,8 +57,40 @@
 </footer>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        try {
+            var userInfoJSON = Android.getUserInfo(); // Ottiene il JSON dall'interfaccia Kotlin
+            var userInfo = JSON.parse(userInfoJSON); // Converte il JSON in oggetto
 
+            // Aggiorna i dati nel profilo
+            document.getElementById("profile-img").src = userInfo.urltarget + "/api/users/" + userInfo.user_id + "/profile-image";
+            document.getElementById("user-name").textContent = userInfo.name || "N/D";
+            document.getElementById("user-surname").textContent = userInfo.surname || "N/D";
+            document.getElementById("user-email").textContent = userInfo.email || "N/D";
+            document.getElementById("user-role").textContent = userInfo.role || "N/D";
 
+            // Show statistics only if the user is a student
+            if (userInfo.role === "student") {
+                // Update statistics data
+                document.getElementById("played-games").textContent = userInfo.played_games || "0";
+                document.getElementById("score").textContent = userInfo.score || "0";
+                document.getElementById("win-percentage").textContent = userInfo.win_percentage || "0%";
+                document.getElementById("average-score").textContent = userInfo.average_score + "/30" || "0/30";
+            } else {
+                // Hide the statistics section if the user is not a student
+                document.getElementById("statistics").style.display = "none";
+            }
+
+        } catch (e) {
+            console.error("Errore durante il recupero delle informazioni utente: " + e.message);
+            // Fallback in case of error
+            document.getElementById("user-name").textContent = "N/D";
+            document.getElementById("user-surname").textContent = "N/D";
+            document.getElementById("user-email").textContent = "N/D";
+            document.getElementById("user-role").textContent = "N/D";
+            document.getElementById("statistics").style.display = "none"; // Hide statistics on error
+        }
+    });
 </script>
 </body>
 </html>

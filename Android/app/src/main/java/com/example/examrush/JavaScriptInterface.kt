@@ -24,7 +24,7 @@ class JavaScriptInterface(private val context: Context, private val webView: Web
 
     val client = OkHttpClient() // OkHttp client per richieste HTTP
     //val urltarget: String = "http://192.168.1.200:5000"
-    var urltarget: String = "http://188.245.48.20:5000"
+    var urltarget: String = "http://192.168.0.10:5000"
 
     var deckJson : String = ""// Decks in ArrayJSON
     var currentDeck : String = "" // Cards in JSon

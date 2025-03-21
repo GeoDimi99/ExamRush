@@ -24,15 +24,57 @@
         <img id="profile-img" alt="Immagine Profilo" style="background-color: white">
         <ul>
             <li><span id="username">[Username]</span></li>
-            <li>Average score: <span id="average-score">N/A</span></li>
-            <li>Games played: <span id="played-games">N/A</span></li>
+            <div id="student-stats">
+                <li>Average score: <span id="average-score">N/A</span></li>
+                <li>Games played: <span id="played-games">N/A</span></li>
+            </div>
 
         </ul>
     </section>
 </a>
-<a href="deck.html" style="display: block; text-align: center; margin-top: 20px; font-size: 24px; font-weight: bold; background-color: #007bff; color: white; padding: 15px; border-radius: 10px; text-decoration: none;">
-    Play!
+<a href="deck.html" style="
+    display: block;
+    text-align: center;
+    font-size: 18px; /* Smaller font size */
+    font-weight: bold;
+    background-color: #648db5;
+    color: white;
+    padding: 10px 15px; /* Smaller padding */
+    border-radius: 15px; /* Rounded corners like the profile box */
+    text-decoration: none;
+    width: calc(100% - 40px); /* Width adjusted for padding */
+    box-sizing: border-box;
+    margin-top: 50px; /* Top margin like the profile box */
+    margin-bottom: 10px; /* Reduced bottom margin to bring buttons closer */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+    max-width: 600px; /* Maximum width like the profile box */
+">
+    Play
 </a>
+
+<a href="add-deck.html" id="manage-decks-button" style="
+    display: none; /* Hidden by default */
+    text-align: center;
+    font-size: 18px; /* Smaller font size */
+    font-weight: bold;
+    background-color:#648db5;
+    color: white;
+    padding: 10px 15px; /* Smaller padding */
+    border-radius: 15px; /* Rounded corners like the profile box */
+    text-decoration: none;
+    width: calc(100% - 40px); /* Width adjusted for padding */
+    box-sizing: border-box;
+    margin-top: 10px; /* Reduced top margin to bring buttons closer */
+    margin-bottom: 30px; /* Bottom margin like the profile box */
+    margin-left: auto; /* Center horizontally */
+    margin-right: auto; /* Center horizontally */
+    max-width: 600px; /* Maximum width like the profile box */
+">
+    Add Deck
+</a>
+
+
 
 <footer>
     <p>&copy; 2025 ExamRush. Txutti i diritti riservati.</p>
@@ -51,6 +93,20 @@
             document.getElementById("username").textContent = userInfo.name || "Ospite";
             document.getElementById("average-score").textContent = userInfo.average_score + "/30" || "N/D";
             document.getElementById("played-games").textContent = userInfo.played_games || "N/D";
+
+            // Show "Statistics" only if you are student
+             if (userInfo.role === "student") {
+                document.getElementById("average-score").textContent = userInfo.average_score + "/30" || "N/D";
+                document.getElementById("played-games").textContent = userInfo.played_games || "N/D";
+            } else {
+                // Hide the student stats container if the user is not a student
+                document.getElementById("student-stats").style.display = "none";
+            }
+
+            // Show "Manage Decks" button if the user is a teacher
+            if (userInfo.role === "teacher") {
+                document.getElementById("manage-decks-button").style.display = "block";
+            }
 
         } catch (e) {
             console.error("Errore durante il recupero delle informazioni utente: " + e.message);

@@ -1,0 +1,20 @@
+# SYSTEM DESCRIPTION:
+ExamRush is a mobile application designed to help students study interactively through multiple-choice quizzes. 
+The application allows users to create a profile, choose a question deck, and answer questions using both touch and the phone's motion sensor. 
+The system integrates Firebase Authentication for user registration and login, and provides user profile management, including profile picture upload and cartoonization using OpenCV. 
+The backend is Docker-based, utilizing Flask for the CRUD interface, MinIO for image storage, and MongoDB for data management. 
+The application supports multi-user functionality, an interactive and animated UI, and utilizes the phone's accelerometer for navigation between questions.
+
+# USER STORIES:
+- As a new user, I want to register an account using my email and password so that I can access the application.
+- As a user, I want to log in using my credentials so that I can resume using the application.
+- As a user, I want to upload and edit my profile picture so that I can personalize my account.
+- As a user, I want to apply a cartoon filter to my profile picture so that it looks fun and unique.
+- As a user, I want an interactive and animated user interface so that the application is engaging and easy to use.
+- As a student, I want to browse and select from multiple question decks so that I can choose a topic to study.
+- As a student, I want to answer multiple-choice questions interactively so that I can test my knowledge.
+- As a student, I want to search for decks using a search bar so that I can quickly find decks by topic, subject, or keyword.
+- As a student, I want to see statistics about my performance (e.g., average score, strengths, weaknesses, progress over time) so that I can track my knowledge and identify areas for improvement.
+- As a teacher, I want to create and upload multiple-choice question decks so that my students can use them for studying.
+- As a teacher, I want to test the decks I upload by answering the questions myself so that I can ensure they are accurate and functional.
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game - ExamRush</title>
+    <link rel="stylesheet" href="../css/game.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/home.css">
+    <script src="../js/main.js" defer></script>
+    <script src="../js/game.js" defer></script>
+</head>
+<body>
+<header>
+    <nav>
+        <ul style="display: flex; align-items: center; padding: 0; margin: 0;">
+            <li style="margin-right: auto; list-style: none;">
+                <a href="deck.html" style="font-size: 24px; text-decoration: none; padding: 10px;">⬅</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+
+<main>
+    <button id="start-turn">
+        <img id="profile-img" src="../images/pick-card.png" alt="Immagine Profilo">
+    </button>
+    <p id="shake-message" style="display: none; font-size: 18px; font-weight: bold;">Shake your phone for the next question!</p>
+
+    <div id="quiz-container" style="display: none;">
+        <p id="question-counter"></p>
+
+        <p id="question-text"></p>
+        <div id="answers-container"></div>
+        <p id="timer">Time Left: 30s</p>
+    </div>
+
+    <p id="feedback-message" style="display: none; font-size: 20px; font-weight: bold;"></p>
+    <p id="score">Score: 0</p>
+</main>
+
+
+</body>
+</html>

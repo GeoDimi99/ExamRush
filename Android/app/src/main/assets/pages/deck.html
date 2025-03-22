@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Deck - ExamRush</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/deck.css">
+    <script src="../js/main.js" defer></script>
+    <style>
+        /* Style for the "Add New Deck" box */
+        .add-new-deck {
+            border: 2px dashed #3498db; /* Dashed border */
+            border-radius: 15px; /* Rounded corners */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 150px; /* Adjust height as needed */
+            cursor: pointer;
+            text-decoration: none; /* Remove underline from link */
+            background-color: #f0f8ff; /* Light background color */
+            margin-bottom: 20px; /* Space between this box and the next deck */
+        }
+
+        .add-new-deck:hover {
+            background-color: #e0f0ff; /* Slightly darker background on hover */
+        }
+
+        .add-new-deck .plus-circle {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #3498db;
+            border-radius: 50%; /* Circle */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #3498db; /* Background color for the circle */
+            color: white; /* White plus symbol */
+            font-size: 24px; /* Size of the plus symbol */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="profile.html">Profilo</a></li>
+            <li><a href="game.html">Decks</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section id="deck-management">
+    <h2>Decks</h2>
+    <div id="search-bar">
+        <input type="text" id="search-input" placeholder="Cerca deck per titolo o descrizione...">
+        <button id="search-button">Cerca</button>
+    </div>
+    <div id="deck-list">
+        <!-- Deck items will be dynamically inserted here -->
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 ExamRush. Tutti i diritti riservati.</p>
+</footer>
+
+<script>
+    // Sample deck data
+    const decks_str = Android.getAllDecks();
+    const decks = JSON.parse(decks_str);
+
+    // Get user info to check role
+    const userInfo = JSON.parse(Android.getUserInfo());
+    const isTeacher = userInfo.role === "teacher";
+
+    // Function to render decks
+    function renderDecks(filteredDecks) {
+        const deckList = document.getElementById("deck-list");
+        deckList.innerHTML = ""; // Clear existing content
+
+        // Add the "Add New Deck" box if the user is a teacher
+        if (isTeacher) {
+            const addNewDeckItem = document.createElement("a");
+            addNewDeckItem.className = "deck-item add-new-deck";
+            addNewDeckItem.href = "add-deck.html"; // Link to the add new deck page
+            addNewDeckItem.innerHTML = `
+                <div class="plus-circle">+</div>
+            `;
+            deckList.appendChild(addNewDeckItem);
+        }
+
+        // Render the rest of the decks
+        filteredDecks.forEach(deck => {
+            const deckItem = document.createElement("div");
+            deckItem.className = "deck-item";
+            deckItem.innerHTML = `
+                <h3>${deck.title}</h3>
+                <p>${deck.description}</p>
+                <p><strong>Teacher ID:</strong> ${deck.teacher_id}</p>
+            `;
+
+            // Add click event
+            deckItem.addEventListener("click", () => {
+                let base64Title = btoa(deck.title);
+                Android.getDeckByTitle(base64Title);
+                window.location.href = "game.html";
+            });
+
+            deckList.appendChild(deckItem);
+        });
+    }
+
+    // Initial render of all decks
+    renderDecks(decks);
+
+    // Search functionality
+    const searchInput = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+
+    searchButton.addEventListener("click", () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredDecks = decks.filter(deck =>
+            deck.title.toLowerCase().includes(searchTerm) ||
+            deck.description.toLowerCase().includes(searchTerm)
+        );
+        renderDecks(filteredDecks);
+    });
+
+    // Optional: Search as you type
+    searchInput.addEventListener("input", () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredDecks = decks.filter(deck =>
+            deck.title.toLowerCase().includes(searchTerm) ||
+            deck.description.toLowerCase().includes(searchTerm)
+        );
+        renderDecks(filteredDecks);
+    });
+</script>
+</body>
+</html>

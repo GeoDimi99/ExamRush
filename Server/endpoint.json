@@ -1,0 +1,88 @@
+{
+    "authentication": {
+      "register": {
+        "endpoint": "/api/register",
+        "method": "POST",
+        "description": "Registra un nuovo utente",
+        "body": {
+          "username": "string",
+          "password": "string",
+          "email": "string",
+          "role": "student",
+          "average_score": 0,
+          "played_games": 0
+        }
+      }
+    },
+    "decks": {
+      "getAll": {
+        "endpoint": "/api/decks",
+        "method": "GET",
+        "description": "Restituisce la lista di tutti i deck disponibili"
+      },
+      "getById": {
+        "endpoint": "/api/decks/{deck_id}",
+        "method": "GET",
+        "description": "Restituisce le informazioni di un deck specifico, tra cui il numero di carte"
+      },
+      "update": {
+        "endpoint": "/api/decks/{deck_id}",
+        "method": "PUT",
+        "description": "Aggiorna il numero di persone che hanno giocato",
+        "body": {
+          "number": 1
+        }
+      }
+    },
+    "cards": {
+      "getAll": {
+        "endpoint": "/api/decks/{deck_id}/cards",
+        "method": "GET",
+        "description": "Restituisce tutte le card di un deck"
+      },
+      "getById": {
+        "endpoint": "/api/decks/{deck_id}/cards/{card_id}",
+        "method": "GET",
+        "description": "Restituisce una card specifica"
+      },
+      "chechById": {
+        "endpoint": "/api/decks/{deck_id}/cards/{card_id}/solution",
+        "method": "GET",
+        "description": "Restituisce la risposta di una card specifica"
+      }
+    },
+    "profile": {
+      "getProfileImage": {
+        "endpoint": "/api/users/{user_id}/profile-image",
+        "method": "GET",
+        "description": "Restituisce l'immagine del profilo dell'utente"
+      },
+      "uploadProfileImage": {
+        "endpoint": "/api/users/{user_id}/profile-image",
+        "method": "POST",
+        "description": "Carica una nuova immagine del profilo per l'utente",
+        "body": "Immagine binaria (multipart/form-data)"
+      },
+      "updateProfileImage": {
+        "endpoint": "/api/users/{user_id}/profile-image",
+        "method": "PUT",
+        "description": "Aggiorna l'immagine del profilo dell'utente"
+      },
+      "deleteProfileImage": {
+        "endpoint": "/api/users/{user_id}/profile-image",
+        "method": "DELETE",
+        "description": "Elimina l'immagine del profilo dell'utente"
+      },
+      "getUserInfo": {
+        "endpoint": "/api/users/{user_id}",
+        "method": "GET",
+        "description": "Ritorna le informazioni dell'utente"
+      },
+      "updateUserInfo": {
+        "endpoint": "/api/users/{user_id}",
+        "method": "PUT",
+        "description": "Aggiorna le informazioni dell'utente"
+      }
+    }
+  }
+  

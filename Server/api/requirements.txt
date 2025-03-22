@@ -1,0 +1,6 @@
+flask
+pymongo
+boto3
+python-dotenv
+gunicorn
+minio

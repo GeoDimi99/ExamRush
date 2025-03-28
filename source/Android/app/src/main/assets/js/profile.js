@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var userInfo = JSON.parse(Android.getUserInfo());
 
         // Aggiorna i dati nel profilo
-        //document.getElementById("profile-img").src = userInfo.urltarget + "/api/users/" + userInfo.user_id + "/profile-image";
+        document.getElementById("profile-img").src = userInfo.urltarget + "/api/users/" + userInfo.user_id + "/profile-image";
         document.getElementById("user-name").textContent = userInfo.name;
         document.getElementById("user-surname").textContent = userInfo.surname;
         document.getElementById("user-email").textContent = userInfo.email;
